@@ -9,6 +9,8 @@ import UIKit
 
 class CoversVC: UIViewController, UITabBarDelegate {
     
+    var coverPosts: [[String: Any]] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -22,6 +24,7 @@ class CoversVC: UIViewController, UITabBarDelegate {
         
         createCards(scrollView: scrollView)
         createTabBar()
+        fetchDataFromServer()
     }
     
     
@@ -195,6 +198,70 @@ class CoversVC: UIViewController, UITabBarDelegate {
 
         return cardView
     }
+    
+    func fetchDataFromServer() {
+        // Replace the URL with the actual URL of your server endpoint
+        if let url = URL(string: "http://localhost:3000/api/v1/posts.json") {
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                // Check for errors
+                if let error = error {
+                    print("Error: \(error)")
+                    return
+                }
+                
+                // Check for a successful response
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    print("Error: Invalid response")
+                    return
+                }
+                
+                // Parse the data
+                if let data = data {
+                    do {
+//                        let json = try JSONSerialization.jsonObject(with: data, options: [])
+                        self.getCoverPostsFromData(data)
+//                        print("Received data: \(json)")
+                    } catch {
+                        print("Error parsing JSON: \(error)")
+                    }
+                }
+            }
+            
+            // Start the task
+            task.resume()
+        }
+    }
+    
+    func getCoverPostsFromData(_ data: Data){
+        
+            do {
+                // Parse the JSON data into a dictionary
+                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
+                    // Iterate over the dictionary
+    //            for i in json as! [String: Any] {
+    //                print(i)
+    //            }
+                
+                // Extract entity parameters
+                if let unwrappedArray = json {
+                    for dictionary in unwrappedArray {
+//                        print(dictionary["name"])
+                        if let type = dictionary["type"] as? String {
+                            if type == "CoverPost" { self.coverPosts.append(dictionary) }
+                        }
+                    }
+                }
+//                print(json)
+                        
+                } catch {
+                    print("Error parsing JSON: \(error)")
+                }
+        print(self.coverPosts)
+        
+        
+        
+        }
     
     @objc func viewTapped() {
         print("cunty")
