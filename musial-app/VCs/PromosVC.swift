@@ -25,6 +25,7 @@ class PromosVC: UIViewController, UITabBarDelegate {
         let scrollView = UIScrollView()
         scrollView.alwaysBounceVertical = true
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.backgroundColor = .black
         
         self.mainScroll = scrollView
         
@@ -210,9 +211,7 @@ class PromosVC: UIViewController, UITabBarDelegate {
         return cardView
     }
     
-    func fetchDataFromServer() -> [[String: Any]] {
-        
-        var toReturn: [[String: Any]] = []
+    func fetchDataFromServer() {
         
         // Replace the URL with the actual URL of your server endpoint
         if let url = URL(string: "http://localhost:3000/api/v1/posts.json") {
@@ -251,8 +250,6 @@ class PromosVC: UIViewController, UITabBarDelegate {
             // Start the task
             task.resume()
         }
-        
-        return toReturn
     }
     
     func getCoverPostsFromData(_ data: Data) -> Void {
@@ -289,7 +286,8 @@ class PromosVC: UIViewController, UITabBarDelegate {
         }
     
     @objc func viewTapped() {
-        print("cunty")
+        let viewController = PostVC()
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 

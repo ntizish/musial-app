@@ -7,13 +7,11 @@
 
 import UIKit
 
-class VideosVC: UIViewController, UITabBarDelegate {
+class PostVC: UIViewController, UITabBarDelegate {
     
+    var currentPost: [String: Any] = [:]
     var mainScroll: UIScrollView? = nil
-    var coverPosts: [[String: Any]] = []
     var tabBar: UITabBar? = nil
-    
-    let postCovers: [String] = ["image1", "image2", "image3", "image4", "image5"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,11 +24,24 @@ class VideosVC: UIViewController, UITabBarDelegate {
         scrollView.alwaysBounceVertical = true
         scrollView.showsVerticalScrollIndicator = false
         scrollView.backgroundColor = .black
-        
         self.mainScroll = scrollView
         
         fetchDataFromServer()
         createTabBar()
+    }
+    
+    // Meta data is heading, description, author and the artist
+    func createPostMetaData(superView: UIScrollView) {
+        let headingLabel = UILabel()
+        headingLabel.text = "Oh-oh-oh-oh timofey want a your i love romance."
+        headingLabel.font = UIFont.boldSystemFont(ofSize: 24)
+        headingLabel.textColor = .black
+        
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = "Everything and the want love want bad."
+        descriptionLabel.font = UIFont.systemFont(ofSize: 14)
+        descriptionLabel.textColor = .darkGray
+        descriptionLabel.numberOfLines = 2
     }
     
     
@@ -68,14 +79,14 @@ class VideosVC: UIViewController, UITabBarDelegate {
         tabBar.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
     
-    func createCards(scrollView: UIScrollView) {
+    func createInitialLayout(scrollView: UIScrollView) {
         // Create a banner
         let banner = UIImageView()
-        banner.image = UIImage(named: "M_BannerInCovers")
+        banner.image = UIImage(named: "image5")
         banner.translatesAutoresizingMaskIntoConstraints = false
         banner.contentMode = .scaleAspectFill
         banner.clipsToBounds = true
-        banner.layer.cornerRadius = 8
+//        banner.layer.cornerRadius = 8
         
         // Create a UIStackView
         let stackView = UIStackView()
@@ -84,21 +95,45 @@ class VideosVC: UIViewController, UITabBarDelegate {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(stackView)
         
+        let headingLabel = UILabel()
+        headingLabel.text = currentPost["name"] as? String
+        headingLabel.font = UIFont.boldSystemFont(ofSize: 24)
+        headingLabel.textColor = .white
+        headingLabel.numberOfLines = 4
+        headingLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = currentPost["description"] as? String
+        descriptionLabel.font = UIFont.systemFont(ofSize: 14)
+        descriptionLabel.textColor = .lightGray
+        descriptionLabel.numberOfLines = 10
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        let bodyText = UITextView()
+        bodyText.isScrollEnabled = false
+        bodyText.text = currentPost["body"] as? String
+        bodyText.font = UIFont.systemFont(ofSize: 18)
+        bodyText.backgroundColor = nil
+        bodyText.textColor = .white
+        bodyText.translatesAutoresizingMaskIntoConstraints = false
+        
+        let authorName = UILabel()
+        authorName.text = "user_2@email.com"
+        print(currentPost)
+        authorName.font = UIFont.systemFont(ofSize: 14)
+        authorName.backgroundColor = nil
+        authorName.textColor = .white
+        authorName.translatesAutoresizingMaskIntoConstraints = false
+        
         // Add cards to the scroll view
         stackView.addSubview(banner)
+        stackView.addSubview(headingLabel)
+        stackView.addSubview(descriptionLabel)
+        stackView.addSubview(authorName)
+        stackView.addSubview(bodyText)
         
         // Add the scroll view to the view
         view.addSubview(scrollView)
-        
-//        let coverPosts = self.fetchDataFromServer()
-        
-        for cardData in self.coverPosts {
-            let card = createPreviewCard(image: UIImage(named: self.postCovers.randomElement() ?? "image1"), heading: cardData["name"] as! String, description: (cardData["description"] as! String))
-            
-            
-            stackView.addArrangedSubview(card)
-        }
-        
         // Configure AutoLayout for the scroll view
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
@@ -108,10 +143,26 @@ class VideosVC: UIViewController, UITabBarDelegate {
         
         // Configure AutoLayout for the cards
         NSLayoutConstraint.activate([
-            banner.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
-            banner.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            banner.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            banner.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            banner.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            banner.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             banner.heightAnchor.constraint(equalToConstant: 180),
+            
+            headingLabel.topAnchor.constraint(equalTo: banner.bottomAnchor, constant: 16),
+            headingLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            headingLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            descriptionLabel.topAnchor.constraint(equalTo: headingLabel.bottomAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            authorName.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            authorName.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            authorName.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            bodyText.topAnchor.constraint(equalTo: authorName.bottomAnchor, constant: 32),
+            bodyText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            bodyText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             stackView.topAnchor.constraint(equalTo: banner.bottomAnchor, constant: 32),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -150,67 +201,6 @@ class VideosVC: UIViewController, UITabBarDelegate {
         }
     }
     
-    
-
-    // Function to create a preview card
-    func createPreviewCard(image: UIImage?, heading: String, description: String) -> UIView {
-        let cardView = UIView()
-        cardView.backgroundColor = .lightGray
-        cardView.layer.cornerRadius = 8
-        cardView.clipsToBounds = true
-
-        let imageView = UIImageView()
-        imageView.image = image
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-
-        let headingLabel = UILabel()
-        headingLabel.text = heading
-        headingLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        headingLabel.textColor = .black
-        
-        let descriptionLabel = UILabel()
-        descriptionLabel.text = description
-        descriptionLabel.font = UIFont.systemFont(ofSize: 14)
-        descriptionLabel.textColor = .darkGray
-        descriptionLabel.numberOfLines = 2
-
-        // Add subviews to the card view
-        cardView.addSubview(imageView)
-        cardView.addSubview(headingLabel)
-        cardView.addSubview(descriptionLabel)
-
-        // Configure AutoLayout for the card view
-        cardView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        headingLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
-        cardView.addGestureRecognizer(tapGesture)
-        
-        // Enable user interaction for the UIView
-        cardView.isUserInteractionEnabled = true
-
-        NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: cardView.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor),
-            imageView.heightAnchor.constraint(equalToConstant: 150),
-
-            headingLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
-            headingLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 8),
-            headingLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -8),
-
-            descriptionLabel.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 4),
-            descriptionLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 8),
-            descriptionLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -8),
-            descriptionLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -8)
-        ])
-
-        return cardView
-    }
-    
     func fetchDataFromServer() {
         
         // Replace the URL with the actual URL of your server endpoint
@@ -233,7 +223,7 @@ class VideosVC: UIViewController, UITabBarDelegate {
                 if let data = data {
                     do {
 //                        let json = try JSONSerialization.jsonObject(with: data, options: [])
-                        self.getCoverPostsFromData(data)
+                        self.getPostFromData(data)
                         
 //                        print("Received data: \(json)")
                     } catch {
@@ -243,7 +233,7 @@ class VideosVC: UIViewController, UITabBarDelegate {
                 
                 DispatchQueue.main.async {
 //                    print(self.coverPosts)
-                    self.createCards(scrollView: self.mainScroll!)
+                    self.createInitialLayout(scrollView: self.mainScroll!)
                 }
             }
             
@@ -252,8 +242,8 @@ class VideosVC: UIViewController, UITabBarDelegate {
         }
     }
     
-    func getCoverPostsFromData(_ data: Data) -> Void {
-        var coverPosts: [[String: Any]] = []
+    func getPostFromData(_ data: Data) -> Void {
+        var allPosts: [[String: Any]] = []
         
             do {
                 // Parse the JSON data into a dictionary
@@ -267,8 +257,8 @@ class VideosVC: UIViewController, UITabBarDelegate {
                 if let unwrappedArray = json {
                     for dictionary in unwrappedArray {
 //                        print(dictionary["name"])
-                        if let type = dictionary["type"] as? String {
-                            if type == "CoverPost" { coverPosts.append(dictionary) }
+                        if let name = dictionary["name"] as? String {
+                            allPosts.append(dictionary)
                         }
                     }
                 }
@@ -277,17 +267,11 @@ class VideosVC: UIViewController, UITabBarDelegate {
                 } catch {
                     print("Error parsing JSON: \(error)")
                 }
-        self.coverPosts = coverPosts
-        print(self.coverPosts)
+        self.currentPost = allPosts.randomElement()!
 //        print(coverPosts)
         
         
         
         }
-    
-    @objc func viewTapped() {
-        let viewController = PostVC()
-        navigationController?.pushViewController(viewController, animated: true)
-    }
 }
 

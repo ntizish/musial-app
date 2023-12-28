@@ -18,6 +18,7 @@
 		836D091C2B3CBAB200E2CF72 /* VideosVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836D091B2B3CBAB200E2CF72 /* VideosVC.swift */; };
 		836D091E2B3D7F6800E2CF72 /* PromosVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836D091D2B3D7F6800E2CF72 /* PromosVC.swift */; };
 		836D09202B3D814B00E2CF72 /* ArtistsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836D091F2B3D814B00E2CF72 /* ArtistsVC.swift */; };
+		836D09222B3D82F000E2CF72 /* PostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836D09212B3D82F000E2CF72 /* PostVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		836D091B2B3CBAB200E2CF72 /* VideosVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosVC.swift; sourceTree = "<group>"; };
 		836D091D2B3D7F6800E2CF72 /* PromosVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromosVC.swift; sourceTree = "<group>"; };
 		836D091F2B3D814B00E2CF72 /* ArtistsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistsVC.swift; sourceTree = "<group>"; };
+		836D09212B3D82F000E2CF72 /* PostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				836D091B2B3CBAB200E2CF72 /* VideosVC.swift */,
 				836D091D2B3D7F6800E2CF72 /* PromosVC.swift */,
 				836D091F2B3D814B00E2CF72 /* ArtistsVC.swift */,
+				836D09212B3D82F000E2CF72 /* PostVC.swift */,
 			);
 			path = VCs;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 				836D09012B3B4A6200E2CF72 /* CoversVC.swift in Sources */,
 				836D091E2B3D7F6800E2CF72 /* PromosVC.swift in Sources */,
 				836D08FD2B3B4A6200E2CF72 /* AppDelegate.swift in Sources */,
+				836D09222B3D82F000E2CF72 /* PostVC.swift in Sources */,
 				836D091A2B3CBA8200E2CF72 /* HomeVC.swift in Sources */,
 				836D09072B3B4A6200E2CF72 /* musial_app.xcdatamodeld in Sources */,
 				836D08FF2B3B4A6200E2CF72 /* SceneDelegate.swift in Sources */,
