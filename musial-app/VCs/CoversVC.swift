@@ -54,10 +54,7 @@ class CoversVC: UIViewController, UITabBarDelegate {
         promoTabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.white], for: .normal)
         
         // Add tab bar items to the tab bar
-        tabBar.setItems([coversTabBarItem, artistTabBarItem, homeTabBarItem, videoTabBarItem, promoTabBarItem], animated: false)
-        tabBar.setItems([coversTabBarItem, artistTabBarItem, homeTabBarItem, videoTabBarItem, promoTabBarItem], animated: false)
-        tabBar.setItems([coversTabBarItem, artistTabBarItem, homeTabBarItem, videoTabBarItem, promoTabBarItem], animated: false)
-        tabBar.setItems([coversTabBarItem, artistTabBarItem, homeTabBarItem, videoTabBarItem, promoTabBarItem], animated: false)
+        tabBar.setItems([artistTabBarItem, coversTabBarItem, homeTabBarItem, videoTabBarItem, promoTabBarItem], animated: false)
         
         // Add the tab bar to the view
         view.addSubview(tabBar)
@@ -85,12 +82,6 @@ class CoversVC: UIViewController, UITabBarDelegate {
         stackView.spacing = 16  // Adjust the spacing between views as needed
         stackView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(stackView)
-        
-        // Create preview cards
-//        let card1 = createPreviewCard(image: UIImage(named: "image1"), heading: "Название обложки", description: "Description for Card 1.")
-//        let card2 = createPreviewCard(image: UIImage(named: "image2"), heading: "Название обложки", description: "Description for Card 2.")
-//        let card3 = createPreviewCard(image: UIImage(named: "image3"), heading: "Название обложки", description: "Description for Card 3.")
-//        let card4 = createPreviewCard(image: UIImage(named: "image4"), heading: "Название обложки", description: "Long Description foasgs.kgnglkahjablsgkfjah lfafsjag fugfasl gaiffa gagfofasalsfi  r Card 4.")
         
         // Add cards to the scroll view
         stackView.addSubview(banner)
@@ -133,12 +124,26 @@ class CoversVC: UIViewController, UITabBarDelegate {
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         // Handle tab selection based on the item's tag or any custom logic
         switch item.tag {
+        case 0:
+            print("Home tab selected")
+            let viewController = HomeVC()
+            navigationController?.pushViewController(viewController, animated: true)
+        case 1:
+            print("Artists tab selected")
+            let viewController = ArtistsVC()
+            navigationController?.pushViewController(viewController, animated: true)
+        case 2:
+            print("Covers tab selected")
+            let viewController = CoversVC()
+            navigationController?.pushViewController(viewController, animated: true)
         case 3:
             print("Videos tab selected")
             let viewController = VideosVC()
             navigationController?.pushViewController(viewController, animated: true)
-        case 1:
-            print("Settings tab selected")
+        case 4:
+            print("Promos tab selected")
+            let viewController = PromosVC()
+            navigationController?.pushViewController(viewController, animated: true)
         default:
             break
         }

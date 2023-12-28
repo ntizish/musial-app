@@ -7,7 +7,7 @@
 
 import UIKit
 
-class VideosVC: UIViewController, UITabBarDelegate {
+class PromosVC: UIViewController, UITabBarDelegate {
     
     var mainScroll: UIScrollView? = nil
     var coverPosts: [[String: Any]] = []
