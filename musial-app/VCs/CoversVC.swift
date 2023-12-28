@@ -9,7 +9,11 @@ import UIKit
 
 class CoversVC: UIViewController, UITabBarDelegate {
     
+    var mainScroll: UIScrollView? = nil
     var coverPosts: [[String: Any]] = []
+    var tabBar: UITabBar? = nil
+    
+    let postCovers: [String] = ["image1", "image2", "image3", "image4", "image5"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,9 +26,10 @@ class CoversVC: UIViewController, UITabBarDelegate {
         scrollView.alwaysBounceVertical = true
         scrollView.showsVerticalScrollIndicator = false
         
-        createCards(scrollView: scrollView)
-        createTabBar()
+        self.mainScroll = scrollView
+        
         fetchDataFromServer()
+        createTabBar()
     }
     
     
@@ -33,6 +38,7 @@ class CoversVC: UIViewController, UITabBarDelegate {
         let tabBar = UITabBar()
         tabBar.delegate = self
         tabBar.barTintColor = UIColor.darkGray
+        self.tabBar = tabBar
         
         // Create tab bar items
         let homeTabBarItem = UITabBarItem(title: nil, image: UIImage(named: "logo-white")!.withRenderingMode(UIImage.RenderingMode.alwaysOriginal), tag: 0)
@@ -73,28 +79,40 @@ class CoversVC: UIViewController, UITabBarDelegate {
         banner.clipsToBounds = true
         banner.layer.cornerRadius = 8
         
+        // Create a UIStackView
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 16  // Adjust the spacing between views as needed
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(stackView)
+        
         // Create preview cards
-        let card1 = createPreviewCard(image: UIImage(named: "image1"), heading: "Название обложки", description: "Description for Card 1.")
-        let card2 = createPreviewCard(image: UIImage(named: "image2"), heading: "Название обложки", description: "Description for Card 2.")
-        let card3 = createPreviewCard(image: UIImage(named: "image3"), heading: "Название обложки", description: "Description for Card 3.")
-        let card4 = createPreviewCard(image: UIImage(named: "image4"), heading: "Название обложки", description: "Description for Card 4.")
+//        let card1 = createPreviewCard(image: UIImage(named: "image1"), heading: "Название обложки", description: "Description for Card 1.")
+//        let card2 = createPreviewCard(image: UIImage(named: "image2"), heading: "Название обложки", description: "Description for Card 2.")
+//        let card3 = createPreviewCard(image: UIImage(named: "image3"), heading: "Название обложки", description: "Description for Card 3.")
+//        let card4 = createPreviewCard(image: UIImage(named: "image4"), heading: "Название обложки", description: "Long Description foasgs.kgnglkahjablsgkfjah lfafsjag fugfasl gaiffa gagfofasalsfi  r Card 4.")
         
         // Add cards to the scroll view
-        scrollView.addSubview(banner)
-        scrollView.addSubview(card1)
-        scrollView.addSubview(card2)
-        scrollView.addSubview(card3)
-        scrollView.addSubview(card4)
+        stackView.addSubview(banner)
         
         // Add the scroll view to the view
         view.addSubview(scrollView)
+        
+//        let coverPosts = self.fetchDataFromServer()
+        
+        for cardData in self.coverPosts {
+            let card = createPreviewCard(image: UIImage(named: self.postCovers.randomElement() ?? "image1"), heading: cardData["name"] as! String, description: (cardData["description"] as! String))
+            
+            
+            stackView.addArrangedSubview(card)
+        }
         
         // Configure AutoLayout for the scroll view
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: self.tabBar!.topAnchor).isActive = true
         
         // Configure AutoLayout for the cards
         NSLayoutConstraint.activate([
@@ -103,23 +121,11 @@ class CoversVC: UIViewController, UITabBarDelegate {
             banner.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             banner.heightAnchor.constraint(equalToConstant: 180),
             
-            card1.topAnchor.constraint(equalTo: banner.bottomAnchor, constant: 32),
-            card1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            card1.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
-            
-            card2.topAnchor.constraint(equalTo: card1.bottomAnchor, constant: 16),
-            card2.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            card2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
-            card3.topAnchor.constraint(equalTo: card2.bottomAnchor, constant: 16),
-            card3.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            card3.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            
-            card4.topAnchor.constraint(equalTo: card3.bottomAnchor, constant: 16),
-            card4.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            card4.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            card4.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -16)
+            stackView.topAnchor.constraint(equalTo: banner.bottomAnchor, constant: 32),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
     }
     
@@ -156,7 +162,7 @@ class CoversVC: UIViewController, UITabBarDelegate {
         headingLabel.text = heading
         headingLabel.font = UIFont.boldSystemFont(ofSize: 16)
         headingLabel.textColor = .black
-
+        
         let descriptionLabel = UILabel()
         descriptionLabel.text = description
         descriptionLabel.font = UIFont.systemFont(ofSize: 14)
@@ -199,7 +205,10 @@ class CoversVC: UIViewController, UITabBarDelegate {
         return cardView
     }
     
-    func fetchDataFromServer() {
+    func fetchDataFromServer() -> [[String: Any]] {
+        
+        var toReturn: [[String: Any]] = []
+        
         // Replace the URL with the actual URL of your server endpoint
         if let url = URL(string: "http://localhost:3000/api/v1/posts.json") {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -221,19 +230,28 @@ class CoversVC: UIViewController, UITabBarDelegate {
                     do {
 //                        let json = try JSONSerialization.jsonObject(with: data, options: [])
                         self.getCoverPostsFromData(data)
+                        
 //                        print("Received data: \(json)")
                     } catch {
                         print("Error parsing JSON: \(error)")
                     }
+                }
+                
+                DispatchQueue.main.async {
+//                    print(self.coverPosts)
+                    self.createCards(scrollView: self.mainScroll!)
                 }
             }
             
             // Start the task
             task.resume()
         }
+        
+        return toReturn
     }
     
-    func getCoverPostsFromData(_ data: Data){
+    func getCoverPostsFromData(_ data: Data) -> Void {
+        var coverPosts: [[String: Any]] = []
         
             do {
                 // Parse the JSON data into a dictionary
@@ -248,7 +266,7 @@ class CoversVC: UIViewController, UITabBarDelegate {
                     for dictionary in unwrappedArray {
 //                        print(dictionary["name"])
                         if let type = dictionary["type"] as? String {
-                            if type == "CoverPost" { self.coverPosts.append(dictionary) }
+                            if type == "CoverPost" { coverPosts.append(dictionary) }
                         }
                     }
                 }
@@ -257,7 +275,9 @@ class CoversVC: UIViewController, UITabBarDelegate {
                 } catch {
                     print("Error parsing JSON: \(error)")
                 }
+        self.coverPosts = coverPosts
         print(self.coverPosts)
+//        print(coverPosts)
         
         
         
