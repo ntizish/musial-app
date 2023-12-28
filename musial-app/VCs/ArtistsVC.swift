@@ -43,10 +43,10 @@ class ArtistsVC: UIViewController, UITabBarDelegate {
         
         // Create tab bar items
         let homeTabBarItem = UITabBarItem(title: nil, image: UIImage(named: "logo-white")!.withRenderingMode(UIImage.RenderingMode.alwaysOriginal), tag: 0)
-        let artistTabBarItem = UITabBarItem(title: "Исполнители", image: UIImage(systemName: "square"), tag: 1)
+        let artistTabBarItem = UITabBarItem(title: "Исполнители", image: UIImage(systemName: "person.3"), tag: 1)
         let coversTabBarItem = UITabBarItem(title: "Обложки", image: UIImage(systemName: "square"), tag: 2)
-        let videoTabBarItem = UITabBarItem(title: "Видео", image: UIImage(systemName: "square"), tag: 3)
-        let promoTabBarItem = UITabBarItem(title: "Промо", image: UIImage(systemName: "square"), tag: 4)
+        let videoTabBarItem = UITabBarItem(title: "Видео", image: UIImage(systemName: "play"), tag: 3)
+        let promoTabBarItem = UITabBarItem(title: "Промо", image: UIImage(systemName: "star"), tag: 4)
         
         homeTabBarItem.imageInsets = UIEdgeInsets(top: 5, left: -10, bottom: -15, right: -10)
         coversTabBarItem.setTitleTextAttributes([NSAttributedString.Key.foregroundColor : UIColor.white], for: .normal)
