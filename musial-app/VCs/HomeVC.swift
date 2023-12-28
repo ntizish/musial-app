@@ -10,10 +10,8 @@ import UIKit
 class HomeVC: UIViewController, UITabBarDelegate {
     
     var mainScroll: UIScrollView? = nil
-    var coverPosts: [[String: Any]] = []
     var tabBar: UITabBar? = nil
     
-    let postCovers: [String] = ["image1", "image2", "image3", "image4", "image5"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,11 +24,11 @@ class HomeVC: UIViewController, UITabBarDelegate {
         scrollView.alwaysBounceVertical = true
         scrollView.showsVerticalScrollIndicator = false
         scrollView.backgroundColor = .black
+        scrollView.isScrollEnabled = true
         
         self.mainScroll = scrollView
-        
-        fetchDataFromServer()
         createTabBar()
+        configureUI(scrollView: scrollView)
     }
     
     
@@ -68,36 +66,67 @@ class HomeVC: UIViewController, UITabBarDelegate {
         tabBar.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
     
-    func createCards(scrollView: UIScrollView) {
+    func configureUI(scrollView: UIScrollView) {
+//        let main = createPreviewCard(image: UIImage(named: "image1"), heading: "Название обложки", description: "Description for Card 1.")
+        
         // Create a banner
         let banner = UIImageView()
-        banner.image = UIImage(named: "M_BannerInCovers")
+        banner.image = UIImage(named: "M_MainBanner")
         banner.translatesAutoresizingMaskIntoConstraints = false
         banner.contentMode = .scaleAspectFill
         banner.clipsToBounds = true
         banner.layer.cornerRadius = 8
         
+        
         // Create a UIStackView
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 16  // Adjust the spacing between views as needed
+        stackView.spacing = 32
         stackView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(stackView)
         
+        // Best videos section
+        // Configure section heading
+        let bestVideoHeading = UILabel()
+        bestVideoHeading.text = "Лучшие видеоклипы"
+        bestVideoHeading.font = UIFont.boldSystemFont(ofSize: 24)
+        bestVideoHeading.textColor = .white
+        bestVideoHeading.translatesAutoresizingMaskIntoConstraints = false
+        bestVideoHeading.textAlignment = .center
+        
+        let bestVideoImage = UIImageView()
+        bestVideoImage.image = UIImage(named: "M_VideoCard")
+        bestVideoImage.translatesAutoresizingMaskIntoConstraints = false
+        bestVideoImage.contentMode = .scaleAspectFill
+        bestVideoImage.clipsToBounds = true
+        bestVideoImage.layer.cornerRadius = 8
+        
+        // Covers section
+        let bestCoversImage = UIImageView()
+        bestCoversImage.image = UIImage(named: "M_Banner")
+        bestCoversImage.translatesAutoresizingMaskIntoConstraints = false
+        bestCoversImage.contentMode = .scaleAspectFill
+        bestCoversImage.clipsToBounds = true
+        bestCoversImage.layer.cornerRadius = 8
+        
+        // Interview section
+        let interviewImage = UIImageView()
+        interviewImage.image = UIImage(named: "M_BannerLong")
+        interviewImage.translatesAutoresizingMaskIntoConstraints = false
+        interviewImage.contentMode = .scaleAspectFill
+        interviewImage.clipsToBounds = true
+
+
+        
         // Add cards to the scroll view
-        stackView.addSubview(banner)
+        stackView.addArrangedSubview(banner)
+        stackView.addArrangedSubview(bestVideoHeading)
+        stackView.addArrangedSubview(bestVideoImage)
+        stackView.addArrangedSubview(bestCoversImage)
+        stackView.addArrangedSubview(interviewImage)
         
         // Add the scroll view to the view
         view.addSubview(scrollView)
-        
-//        let coverPosts = self.fetchDataFromServer()
-        
-        for cardData in self.coverPosts {
-            let card = createPreviewCard(image: UIImage(named: self.postCovers.randomElement() ?? "image1"), heading: cardData["name"] as! String, description: (cardData["description"] as! String))
-            
-            
-            stackView.addArrangedSubview(card)
-        }
         
         // Configure AutoLayout for the scroll view
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -111,13 +140,28 @@ class HomeVC: UIViewController, UITabBarDelegate {
             banner.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 16),
             banner.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
             banner.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            banner.heightAnchor.constraint(equalToConstant: 180),
+            banner.heightAnchor.constraint(equalToConstant: 300),
             
-            stackView.topAnchor.constraint(equalTo: banner.bottomAnchor, constant: 32),
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 32),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            bestVideoHeading.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 8),
+            bestVideoHeading.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            bestVideoImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            bestVideoImage.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            bestVideoImage.heightAnchor.constraint(equalToConstant: 260),
+            
+            bestCoversImage.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            bestCoversImage.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            bestCoversImage.heightAnchor.constraint(equalToConstant: 300),
+            
+            interviewImage.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            interviewImage.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            interviewImage.heightAnchor.constraint(equalToConstant: 400)
         ])
     }
     
@@ -210,80 +254,7 @@ class HomeVC: UIViewController, UITabBarDelegate {
 
         return cardView
     }
-    
-    func fetchDataFromServer() {
-        
-        // Replace the URL with the actual URL of your server endpoint
-        if let url = URL(string: "http://localhost:3000/api/v1/posts.json") {
-            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                // Check for errors
-                if let error = error {
-                    print("Error: \(error)")
-                    return
-                }
-                
-                // Check for a successful response
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    print("Error: Invalid response")
-                    return
-                }
-                
-                // Parse the data
-                if let data = data {
-                    do {
-//                        let json = try JSONSerialization.jsonObject(with: data, options: [])
-                        self.getCoverPostsFromData(data)
-                        
-//                        print("Received data: \(json)")
-                    } catch {
-                        print("Error parsing JSON: \(error)")
-                    }
-                }
-                
-                DispatchQueue.main.async {
-//                    print(self.coverPosts)
-                    self.createCards(scrollView: self.mainScroll!)
-                }
-            }
-            
-            // Start the task
-            task.resume()
-        }
-    }
-    
-    func getCoverPostsFromData(_ data: Data) -> Void {
-        var coverPosts: [[String: Any]] = []
-        
-            do {
-                // Parse the JSON data into a dictionary
-                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
-                    // Iterate over the dictionary
-    //            for i in json as! [String: Any] {
-    //                print(i)
-    //            }
-                
-                // Extract entity parameters
-                if let unwrappedArray = json {
-                    for dictionary in unwrappedArray {
-//                        print(dictionary["name"])
-                        if let type = dictionary["type"] as? String {
-                            if type == "CoverPost" { coverPosts.append(dictionary) }
-                        }
-                    }
-                }
-//                print(json)
-                        
-                } catch {
-                    print("Error parsing JSON: \(error)")
-                }
-        self.coverPosts = coverPosts
-        print(self.coverPosts)
-//        print(coverPosts)
-        
-        
-        
-        }
+
     
     @objc func viewTapped() {
         print("cunty")

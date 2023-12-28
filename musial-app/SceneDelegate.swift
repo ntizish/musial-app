@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         // Create the main view controller
-        let mainViewController = CoversVC()
+        let mainViewController = HomeVC()
 
         // Embed the main view controller in a navigation controller
         let navigationController = UINavigationController(rootViewController: mainViewController)
